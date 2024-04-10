@@ -1,4 +1,4 @@
-import cv2
+import cv
 import numpy as np
 import streamlit as st
 
@@ -9,7 +9,7 @@ def detect_video_deepfake(video):
         ret, frame = video.read()
         if not ret:
             break
-        frames.append(cv2.resize(frame, (224, 224)))  # Assuming the model takes input size (224, 224))
+        frames.append(cv.resize(frame, (224, 224)))  # Assuming the model takes input size (224, 224))
     video.release()
 
     frames = np.array(frames)
@@ -26,10 +26,10 @@ def detect_video_deepfake(video):
 # Function to detect deepfake in an image using computer vision techniques
 def detect_image_deepfake(image):
     # Convert image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
 
     # Calculate variance of Laplacian
-    variance = cv2.Laplacian(gray, cv2.CV_64F).var()
+    variance = cv.Laplacian(gray, cv.CV_64F).var()
 
     # Example threshold for variance
     threshold = 100
@@ -52,7 +52,7 @@ def main():
         if uploaded_image is not None:
             image_bytes = uploaded_image.read()
             image_array = np.frombuffer(image_bytes, np.uint8)
-            image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+            image = cv.imdecode(image_array, cv.IMREAD_COLOR)
             st.write("Shape of uploaded_image:", image.shape if image is not None else "None")
             if image is not None and image.size > 0:  # Check if image is not None and has data
                 st.image(image, caption="Uploaded Image", use_column_width=True)
@@ -70,7 +70,7 @@ def main():
                 f.write(uploaded_video.read())
 
             # Read the video from the temporary file
-            video = cv2.VideoCapture("temp_video.mp4")
+            video = cv.VideoCapture("temp_video.mp4")
 
             # Check if the video is opened successfully
             if video.isOpened():
